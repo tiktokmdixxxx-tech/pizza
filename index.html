@@ -2,308 +2,575 @@
 <html lang="ru">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Пиццерия 🍕</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+    <title>PizzaHub 🍕 - Доставка пиццы</title>
     <style>
         * {
             margin: 0;
             padding: 0;
             box-sizing: border-box;
         }
+
         body {
-            font-family: Arial, sans-serif;
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-            min-height: 100vh;
-            padding: 20px;
+            font-family: 'Segoe UI', -apple-system, BlinkMacSystemFont, Roboto, sans-serif;
+            background: #f5f5f5;
+            color: #1a1a1a;
+            padding-bottom: 80px;
         }
-        .app {
-            max-width: 1200px;
-            margin: 0 auto;
-            background: rgba(255,255,255,0.95);
-            border-radius: 20px;
-            overflow: hidden;
-            box-shadow: 0 20px 60px rgba(0,0,0,0.3);
-        }
+
+        /* Хедер */
         .header {
-            background: linear-gradient(135deg, #ff6b6b, #ee5a24);
+            background: #1a1a1a;
             color: white;
-            padding: 20px;
+            padding: 16px 20px;
+            position: sticky;
+            top: 0;
+            z-index: 100;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
             display: flex;
             justify-content: space-between;
             align-items: center;
             flex-wrap: wrap;
+            gap: 10px;
         }
+
         .logo {
-            font-size: 28px;
-            font-weight: bold;
-        }
-        .phone {
-            font-size: 20px;
-        }
-        .delivery-time {
-            background: rgba(255,255,255,0.2);
-            padding: 8px 15px;
-            border-radius: 20px;
-        }
-        .main-container {
-            display: flex;
-            min-height: 600px;
-        }
-        .sidebar {
-            width: 250px;
-            background: #2c3e50;
-            color: white;
-        }
-        .menu {
-            list-style: none;
-            padding: 20px 0;
-        }
-        .menu-item {
-            padding: 15px 25px;
-            cursor: pointer;
-            transition: all 0.3s ease;
-            display: flex;
-            align-items: center;
-            gap: 12px;
-        }
-        .menu-item:hover {
-            background: #34495e;
-            transform: translateX(5px);
-        }
-        .menu-item.active {
-            background: #e67e22;
-        }
-        .content {
-            flex: 1;
-            padding: 30px;
-        }
-        .page {
-            display: none;
-        }
-        .page.active {
-            display: block;
-        }
-        .hero {
-            text-align: center;
-            padding: 50px 20px;
-        }
-        .hero h1 {
-            font-size: 48px;
-            margin-bottom: 20px;
-            color: #333;
-        }
-        .cta-btn {
-            background: #e67e22;
-            color: white;
-            border: none;
-            padding: 15px 30px;
-            font-size: 18px;
-            border-radius: 50px;
-            cursor: pointer;
-            margin-top: 20px;
-        }
-        .pizza-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
-            gap: 25px;
-            margin-top: 20px;
-        }
-        .pizza-card {
-            background: white;
-            border-radius: 15px;
-            padding: 20px;
-            text-align: center;
-            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
-            transition: transform 0.3s;
-        }
-        .pizza-card:hover {
-            transform: translateY(-10px);
-        }
-        .price {
             font-size: 24px;
             font-weight: bold;
-            color: #e67e22;
-            margin: 10px 0;
+            background: linear-gradient(45deg, #ff6b6b, #ff8e53);
+            background-clip: text;
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            animation: pulse 2s infinite;
         }
-        .add-to-cart {
-            background: #27ae60;
+
+        @keyframes pulse {
+            0%, 100% { opacity: 1; transform: scale(1); }
+            50% { opacity: 0.8; transform: scale(1.02); }
+        }
+
+        .phone {
+            font-size: 14px;
+            background: #333;
+            padding: 6px 12px;
+            border-radius: 20px;
+        }
+
+        /* Корзина иконка */
+        .cart-icon {
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+            background: #ff6b6b;
+            width: 55px;
+            height: 55px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.2);
+            z-index: 200;
+            transition: transform 0.3s;
+        }
+        .cart-icon:hover {
+            transform: scale(1.1);
+        }
+        .cart-count {
+            position: absolute;
+            top: -5px;
+            right: -5px;
+            background: #e74c3c;
             color: white;
+            border-radius: 50%;
+            width: 22px;
+            height: 22px;
+            font-size: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: bold;
+        }
+
+        /* Категории */
+        .categories {
+            padding: 15px;
+            overflow-x: auto;
+            white-space: nowrap;
+            background: white;
+            border-bottom: 1px solid #eee;
+        }
+        .category-btn {
+            display: inline-block;
+            padding: 8px 20px;
+            margin-right: 10px;
+            background: #f0f0f0;
             border: none;
-            padding: 10px 20px;
             border-radius: 25px;
             cursor: pointer;
+            transition: 0.3s;
+        }
+        .category-btn.active {
+            background: #ff6b6b;
+            color: white;
+        }
+
+        /* Панель рекламы */
+        .promo-slider {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 15px;
+            margin: 15px;
+            border-radius: 15px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            cursor: pointer;
+            transition: transform 0.3s;
+        }
+        .promo-slider:hover {
+            transform: translateX(-5px);
+        }
+
+        /* Сетка товаров */
+        .products-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(160px, 1fr));
+            gap: 15px;
+            padding: 15px;
+        }
+
+        .product-card {
+            background: white;
+            border-radius: 15px;
+            overflow: hidden;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.05);
+            transition: 0.3s;
+        }
+        .product-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 5px 20px rgba(0,0,0,0.1);
+        }
+
+        .product-img {
+            width: 100%;
+            height: 130px;
+            object-fit: cover;
+            background: #f9f9f9;
+            font-size: 50px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .product-info {
+            padding: 12px;
+        }
+
+        .product-name {
+            font-weight: bold;
+            font-size: 14px;
+            margin-bottom: 5px;
+        }
+
+        .product-desc {
+            font-size: 11px;
+            color: #777;
+            margin-bottom: 8px;
+        }
+
+        .product-price {
+            font-weight: bold;
+            color: #ff6b6b;
+            font-size: 16px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .old-price {
+            text-decoration: line-through;
+            font-size: 12px;
+            color: #999;
+        }
+
+        .discount-badge {
+            background: #e74c3c;
+            color: white;
+            font-size: 10px;
+            padding: 2px 6px;
+            border-radius: 10px;
+        }
+
+        .add-btn {
+            background: #ff6b6b;
+            color: white;
+            border: none;
+            border-radius: 20px;
+            padding: 6px 12px;
+            cursor: pointer;
+            font-size: 12px;
+        }
+
+        /* Модальное окно корзины */
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0,0,0,0.5);
+            z-index: 300;
+            justify-content: center;
+            align-items: center;
+        }
+        .modal-content {
+            background: white;
+            width: 90%;
+            max-width: 400px;
+            max-height: 80%;
+            border-radius: 20px;
+            overflow-y: auto;
+            padding: 20px;
         }
         .cart-item {
             display: flex;
             justify-content: space-between;
+            padding: 10px 0;
+            border-bottom: 1px solid #eee;
+        }
+        .order-form input {
+            width: 100%;
             padding: 10px;
-            border-bottom: 1px solid #ddd;
+            margin: 8px 0;
+            border: 1px solid #ddd;
+            border-radius: 8px;
         }
-        .total {
-            font-size: 24px;
-            font-weight: bold;
-            text-align: right;
-            margin-top: 20px;
+        .order-form button {
+            width: 100%;
+            background: #ff6b6b;
+            color: white;
+            border: none;
+            padding: 12px;
+            border-radius: 25px;
+            margin-top: 10px;
         }
-        @media (max-width: 768px) {
-            .main-container {
-                flex-direction: column;
-            }
-            .sidebar {
-                width: 100%;
-            }
-            .menu {
-                display: flex;
-                overflow-x: auto;
-            }
+
+        /* Поп-ап акции */
+        .offer-popup {
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            background: white;
+            width: 280px;
+            border-radius: 20px;
+            padding: 20px;
+            text-align: center;
+            z-index: 400;
+            box-shadow: 0 10px 40px rgba(0,0,0,0.2);
+            display: none;
+        }
+        .close-popup {
+            position: absolute;
+            top: 10px;
+            right: 15px;
+            cursor: pointer;
+            font-size: 20px;
+        }
+
+        /* Админ панель */
+        .admin-panel {
+            background: #2c3e50;
+            color: white;
+            padding: 15px;
+            margin: 10px;
+            border-radius: 15px;
+            display: none;
+        }
+        .admin-panel input, .admin-panel select {
+            width: 100%;
+            padding: 8px;
+            margin: 5px 0;
+            border-radius: 8px;
+            border: none;
+        }
+        .admin-panel button {
+            background: #e67e22;
+            color: white;
+            padding: 10px;
+            border: none;
+            border-radius: 10px;
+            margin-top: 5px;
+            width: 100%;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(20px);}
+            to { opacity: 1; transform: translateY(0);}
         }
     </style>
 </head>
 <body>
-    <div class="app">
-        <header class="header">
-            <div class="logo">🍕 PizzaJoy</div>
-            <div class="phone">📞 +7 (999) 999-99-99</div>
-            <div class="delivery-time">🚚 30-45 минут</div>
-        </header>
 
-        <div class="main-container">
-            <nav class="sidebar">
-                <ul class="menu">
-                    <li class="menu-item active" data-page="home">🏠 Главная</li>
-                    <li class="menu-item" data-page="catalog">📋 Каталог</li>
-                    <li class="menu-item" data-page="prices">💰 Цены</li>
-                    <li class="menu-item" data-page="cart">🛒 Корзина</li>
-                    <li class="menu-item" data-page="support">💬 Поддержка</li>
-                </ul>
-            </nav>
+<div class="header">
+    <div class="logo">🍕 PizzaHub</div>
+    <div class="phone">📞 +7 (999) 999-99-99</div>
+</div>
 
-            <main class="content">
-                <div id="home" class="page active">
-                    <div class="hero">
-                        <h1>🍕 Самая вкусная пицца в городе!</h1>
-                        <p>Только натуральные ингредиенты и любовь в каждой пицце</p>
-                        <button class="cta-btn" onclick="navigateTo('catalog')">Сделать заказ →</button>
-                    </div>
-                </div>
+<div class="categories" id="categories"></div>
 
-                <div id="catalog" class="page">
-                    <h2>Наше меню</h2>
-                    <div class="pizza-grid" id="pizzaGrid"></div>
-                </div>
+<div class="promo-slider" id="promoSlider" onclick="applyPromo()">
+    <span>🎁 СЕГОДНЯ: Маргарита + Кола = 499₽ (-30%)</span>
+    <span>👉</span>
+</div>
 
-                <div id="prices" class="page">
-                    <h2>Прайс-лист</h2>
-                    <div id="priceTable"></div>
-                </div>
+<div class="products-grid" id="productsGrid"></div>
 
-                <div id="cart" class="page">
-                    <h2>🛒 Ваша корзина</h2>
-                    <div id="cartItems"></div>
-                    <div class="total" id="cartTotal"></div>
-                    <button class="cta-btn" onclick="checkout()">Оформить заказ</button>
-                </div>
+<div class="cart-icon" onclick="openCart()">
+    🛒
+    <span class="cart-count" id="cartCount">0</span>
+</div>
 
-                <div id="support" class="page">
-                    <h2>💬 Поддержка</h2>
-                    <p>📞 Телефон: <strong>+7 (999) 999-99-99</strong></p>
-                    <p>📧 Email: <strong>pizza@joy.ru</strong></p>
-                    <p>⏰ Режим работы: <strong>10:00 - 23:00</strong></p>
-                </div>
-            </main>
+<!-- Модалка корзины -->
+<div id="cartModal" class="modal">
+    <div class="modal-content">
+        <h3>🛒 Ваш заказ</h3>
+        <div id="cartList"></div>
+        <div id="cartTotal" style="font-weight:bold; margin:10px 0;"></div>
+        <div class="order-form" id="orderForm">
+            <input type="text" id="userName" placeholder="Ваше имя" required>
+            <input type="text" id="userPhone" placeholder="Телефон" required>
+            <input type="text" id="userAddress" placeholder="Адрес доставки" required>
+            <button onclick="submitOrder()">Оформить заказ ✅</button>
         </div>
+        <button onclick="closeCart()" style="margin-top:10px; background:#ccc;">Закрыть</button>
     </div>
+</div>
 
-    <script>
-        const pizzas = {
-            margarita: { name: "Маргарита", price: 450, desc: "Томатный соус, моцарелла, базилик" },
-            pepperoni: { name: "Пепперони", price: 550, desc: "Пепперони, моцарелла, томатный соус" },
-            hawaiian: { name: "Гавайская", price: 520, desc: "Курица, ананас, моцарелла" },
-            four_cheese: { name: "4 сыра", price: 600, desc: "Моцарелла, пармезан, горгонзола, фета" }
-        };
+<!-- Поп-ап акции -->
+<div id="offerPopup" class="offer-popup">
+    <span class="close-popup" onclick="closeOffer()">✖</span>
+    <h3>🎉 Спецпредложение!</h3>
+    <p id="offerText">🍕 Пепперони + 🥤 Кола = 550₽</p>
+    <button onclick="acceptOffer()" style="background:#ff6b6b; border:none; padding:10px 20px; border-radius:25px; margin-top:10px;">Заказать</button>
+</div>
 
-        let cart = [];
+<!-- Админ панель -->
+<div id="adminPanel" class="admin-panel">
+    <h4>👑 Админ панель</h4>
+    <input type="text" id="adminProductName" placeholder="Название товара">
+    <input type="text" id="adminProductDesc" placeholder="Описание">
+    <input type="number" id="adminProductPrice" placeholder="Цена">
+    <select id="adminProductCategory">
+        <option value="pizza">Пицца</option>
+        <option value="drink">Напиток</option>
+        <option value="snack">Закуска</option>
+    </select>
+    <input type="text" id="adminProductImg" placeholder="Эмодзи или текст фото">
+    <button onclick="addProduct()">➕ Добавить товар</button>
+    <button onclick="setDiscount()">🏷️ Установить скидку на выбранное</button>
+    <button onclick="toggleAdmin()">🔒 Закрыть админку</button>
+</div>
+<div style="text-align:center; margin:10px;">
+    <button onclick="toggleAdmin()" style="background:#2c3e50; color:white; border:none; padding:8px 20px; border-radius:20px;">👑 Админ</button>
+</div>
 
-        function renderCatalog() {
-            const grid = document.getElementById('pizzaGrid');
-            if (grid) {
-                grid.innerHTML = Object.entries(pizzas).map(([id, pizza]) => `
-                    <div class="pizza-card">
-                        <h3>${pizza.name}</h3>
-                        <p>${pizza.desc}</p>
-                        <div class="price">${pizza.price} ₽</div>
-                        <button class="add-to-cart" onclick="addToCart('${id}')">В корзину</button>
-                    </div>
-                `).join('');
-            }
-        }
+<script>
+    let products = [
+        { id: 1, name: "Маргарита", desc: "Томатный соус, моцарелла, базилик", price: 450, oldPrice: null, category: "pizza", img: "🍕", discount: 0 },
+        { id: 2, name: "Пепперони", desc: "Пепперони, моцарелла, томатный соус", price: 550, oldPrice: null, category: "pizza", img: "🍕🔥", discount: 0 },
+        { id: 3, name: "Гавайская", desc: "Курица, ананас, моцарелла", price: 520, oldPrice: null, category: "pizza", img: "🍍🍕", discount: 0 },
+        { id: 4, name: "4 сыра", desc: "Моцарелла, пармезан, горгонзола, фета", price: 600, oldPrice: null, category: "pizza", img: "🧀🍕", discount: 0 },
+        { id: 5, name: "Мясная", desc: "Ветчина, бекон, пепперони, курица", price: 650, oldPrice: null, category: "pizza", img: "🥩🍕", discount: 0 },
+        { id: 6, name: "Вегетарианская", desc: "Грибы, перец, оливки, лук", price: 480, oldPrice: null, category: "pizza", img: "🥬🍕", discount: 0 },
+        { id: 7, name: "Кока-Кола", desc: "0.5л", price: 100, oldPrice: null, category: "drink", img: "🥤", discount: 0 },
+        { id: 8, name: "Спрайт", desc: "0.5л", price: 100, oldPrice: null, category: "drink", img: "🥤💚", discount: 0 },
+        { id: 9, name: "Фанта", desc: "0.5л", price: 100, oldPrice: null, category: "drink", img: "🍊🥤", discount: 0 },
+        { id: 10, name: "Сок Яблочный", desc: "0.3л", price: 120, oldPrice: null, category: "drink", img: "🧃", discount: 0 },
+        { id: 11, name: "Картошка фри", desc: "С соусом", price: 150, oldPrice: null, category: "snack", img: "🍟", discount: 0 },
+        { id: 12, name: "Наггетсы", desc: "6 шт", price: 180, oldPrice: null, category: "snack", img: "🐔", discount: 0 },
+        { id: 13, name: "Чесночные палочки", desc: "соус в подарок", price: 130, oldPrice: null, category: "snack", img: "🥖", discount: 0 },
+        { id: 14, name: "Крылышки BBQ", desc: "Острые", price: 220, oldPrice: null, category: "snack", img: "🍗", discount: 0 }
+    ];
+    let cart = JSON.parse(localStorage.getItem('cart')) || [];
+    let currentCategory = "all";
 
-        function renderPrices() {
-            const container = document.getElementById('priceTable');
-            if (container) {
-                container.innerHTML = Object.values(pizzas).map(pizza => `
-                    <div class="cart-item">
-                        <span>${pizza.name}</span>
-                        <span>${pizza.price} ₽</span>
-                    </div>
-                `).join('');
-            }
-        }
+    function saveCart() {
+        localStorage.setItem('cart', JSON.stringify(cart));
+        document.getElementById('cartCount').innerText = cart.reduce((s, i) => s + i.qty, 0);
+    }
 
-        function renderCart() {
-            const container = document.getElementById('cartItems');
-            const totalContainer = document.getElementById('cartTotal');
-            if (container && totalContainer) {
-                if (cart.length === 0) {
-                    container.innerHTML = '<p>Корзина пуста</p>';
-                    totalContainer.innerHTML = '';
-                    return;
-                }
-                const items = cart.map(id => pizzas[id]);
-                const total = items.reduce((sum, i) => sum + i.price, 0);
-                container.innerHTML = items.map(item => `
-                    <div class="cart-item">
-                        <span>${item.name}</span>
-                        <span>${item.price} ₽</span>
-                    </div>
-                `).join('');
-                totalContainer.innerHTML = `Итого: ${total} ₽`;
-            }
-        }
-
-        function addToCart(id) {
-            cart.push(id);
-            renderCart();
-            alert(`✅ ${pizzas[id].name} добавлена в корзину!`);
-        }
-
-        function checkout() {
-            if (cart.length === 0) {
-                alert('Корзина пуста');
-                return;
-            }
-            alert('🎉 Заказ оформлен! С вами свяжется оператор.');
-            cart = [];
-            renderCart();
-        }
-
-        function navigateTo(pageId) {
-            document.querySelectorAll('.page').forEach(page => page.classList.remove('active'));
-            document.getElementById(pageId).classList.add('active');
-            document.querySelectorAll('.menu-item').forEach(item => item.classList.remove('active'));
-            document.querySelector(`.menu-item[data-page="${pageId}"]`).classList.add('active');
-            
-            if (pageId === 'catalog') renderCatalog();
-            if (pageId === 'prices') renderPrices();
-            if (pageId === 'cart') renderCart();
-        }
-
-        document.querySelectorAll('.menu-item').forEach(item => {
-            item.addEventListener('click', () => navigateTo(item.dataset.page));
+    function renderCategories() {
+        const cats = [...new Set(products.map(p => p.category))];
+        let html = `<button class="category-btn ${currentCategory === 'all' ? 'active' : ''}" onclick="filterProducts('all')">Все 🍕</button>`;
+        cats.forEach(cat => {
+            let emoji = cat === 'pizza' ? '🍕' : (cat === 'drink' ? '🥤' : '🍟');
+            html += `<button class="category-btn ${currentCategory === cat ? 'active' : ''}" onclick="filterProducts('${cat}')">${emoji} ${cat}</button>`;
         });
+        document.getElementById('categories').innerHTML = html;
+    }
 
-        renderCatalog();
-        renderPrices();
-    </script>
+    function filterProducts(cat) {
+        currentCategory = cat;
+        renderCategories();
+        renderProducts();
+    }
+
+    function renderProducts() {
+        let filtered = currentCategory === 'all' ? products : products.filter(p => p.category === currentCategory);
+        let html = '';
+        filtered.forEach(p => {
+            let displayPrice = p.discount > 0 ? Math.floor(p.price * (1 - p.discount/100)) : p.price;
+            html += `
+                <div class="product-card">
+                    <div class="product-img">${p.img}</div>
+                    <div class="product-info">
+                        <div class="product-name">${p.name} ${p.discount > 0 ? `<span class="discount-badge">-${p.discount}%</span>` : ''}</div>
+                        <div class="product-desc">${p.desc}</div>
+                        <div class="product-price">
+                            <span>
+                                ${p.discount > 0 ? `<span class="old-price">${p.price}₽</span> ` : ''}
+                                <span style="color:#ff6b6b;">${displayPrice}₽</span>
+                            </span>
+                            <button class="add-btn" onclick="addToCart(${p.id})">+</button>
+                        </div>
+                    </div>
+                </div>
+            `;
+        });
+        document.getElementById('productsGrid').innerHTML = html;
+    }
+
+    function addToCart(id) {
+        let product = products.find(p => p.id === id);
+        if (!product) return;
+        let price = product.discount > 0 ? Math.floor(product.price * (1 - product.discount/100)) : product.price;
+        let cartItem = cart.find(i => i.id === id);
+        if (cartItem) {
+            cartItem.qty++;
+        } else {
+            cart.push({ id: id, name: product.name, price: price, qty: 1, img: product.img });
+        }
+        saveCart();
+        alert(`✅ ${product.name} добавлена в корзину!`);
+    }
+
+    function openCart() {
+        let cartList = document.getElementById('cartList');
+        let total = 0;
+        if (cart.length === 0) {
+            cartList.innerHTML = '<p>Корзина пуста 🍕</p>';
+            document.getElementById('cartTotal').innerHTML = '';
+        } else {
+            let html = '';
+            cart.forEach(item => {
+                total += item.price * item.qty;
+                html += `<div class="cart-item">
+                            <span>${item.img} ${item.name} x${item.qty}</span>
+                            <span>${item.price * item.qty}₽ <button onclick="removeFromCart(${item.id})" style="background:#e74c3c; border:none; border-radius:50%; width:20px;">✖</button></span>
+                         </div>`;
+            });
+            cartList.innerHTML = html;
+            document.getElementById('cartTotal').innerHTML = `💰 Итого: ${total}₽`;
+        }
+        document.getElementById('cartModal').style.display = 'flex';
+    }
+
+    function removeFromCart(id) {
+        cart = cart.filter(i => i.id !== id);
+        saveCart();
+        openCart();
+    }
+
+    function closeCart() {
+        document.getElementById('cartModal').style.display = 'none';
+    }
+
+    function submitOrder() {
+        let name = document.getElementById('userName').value;
+        let phone = document.getElementById('userPhone').value;
+        let address = document.getElementById('userAddress').value;
+        if (!name || !phone || !address) {
+            alert('Заполните все поля!');
+            return;
+        }
+        if (cart.length === 0) {
+            alert('Корзина пуста');
+            return;
+        }
+        alert(`🎉 ${name}, ваш заказ принят! Оператор свяжется с вами по номеру ${phone} для подтверждения.`);
+        cart = [];
+        saveCart();
+        closeCart();
+        renderProducts();
+    }
+
+    let offerShown = false;
+    function showOffer() {
+        if (!offerShown) {
+            setTimeout(() => {
+                document.getElementById('offerPopup').style.display = 'block';
+                offerShown = true;
+            }, 2000);
+        }
+    }
+    function closeOffer() {
+        document.getElementById('offerPopup').style.display = 'none';
+    }
+    function acceptOffer() {
+        let offerProduct = products.find(p => p.id === 2);
+        if (offerProduct) addToCart(2);
+        let drink = products.find(p => p.id === 7);
+        if (drink) addToCart(7);
+        closeOffer();
+    }
+    function applyPromo() {
+        addToCart(1);
+        addToCart(7);
+        alert('Промо-предложение добавлено! Маргарита + Кола в корзине.');
+    }
+
+    let adminVisible = false;
+    function toggleAdmin() {
+        adminVisible = !adminVisible;
+        document.getElementById('adminPanel').style.display = adminVisible ? 'block' : 'none';
+    }
+    function addProduct() {
+        let name = document.getElementById('adminProductName').value;
+        let desc = document.getElementById('adminProductDesc').value;
+        let price = parseInt(document.getElementById('adminProductPrice').value);
+        let category = document.getElementById('adminProductCategory').value;
+        let img = document.getElementById('adminProductImg').value || '🍕';
+        if (!name || !price) { alert('Заполните название и цену'); return; }
+        let newId = Date.now();
+        products.push({ id: newId, name, desc, price, oldPrice: null, category, img, discount: 0 });
+        renderProducts();
+        renderCategories();
+        alert(`✅ Товар ${name} добавлен!`);
+        document.getElementById('adminProductName').value = '';
+        document.getElementById('adminProductDesc').value = '';
+        document.getElementById('adminProductPrice').value = '';
+        document.getElementById('adminProductImg').value = '';
+    }
+    function setDiscount() {
+        let id = prompt('Введите ID товара для скидки (посмотрите в консоль или попробуйте 1-14)');
+        let disc = parseInt(prompt('Введите размер скидки % (0-100)'));
+        if (id && disc >= 0 && disc <= 100) {
+            let product = products.find(p => p.id == id);
+            if (product) {
+                product.discount = disc;
+                renderProducts();
+                alert(`Скидка ${disc}% на ${product.name} установлена!`);
+            } else alert('Товар не найден');
+        }
+    }
+
+    renderCategories();
+    renderProducts();
+    saveCart();
+    showOffer();
+</script>
 </body>
 </html>
