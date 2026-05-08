@@ -1,0 +1,93 @@
+﻿<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Пиццерия 🍕</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        body {
+            font-family: Arial, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            padding: 20px;
+        }
+        .app {
+            max-width: 1200px;
+            margin: 0 auto;
+            background: rgba(255,255,255,0.95);
+            border-radius: 20px;
+            overflow: hidden;
+        }
+        .header {
+            background: linear-gradient(135deg, #ff6b6b, #ee5a24);
+            color: white;
+            padding: 20px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        .logo {
+            font-size: 28px;
+            font-weight: bold;
+        }
+        .phone {
+            font-size: 20px;
+        }
+        .content {
+            padding: 30px;
+            text-align: center;
+        }
+        h1 {
+            color: #333;
+            margin-bottom: 20px;
+        }
+        .features {
+            display: flex;
+            justify-content: center;
+            gap: 20px;
+            margin-top: 30px;
+        }
+        .feature {
+            background: #f0f0f0;
+            padding: 15px 25px;
+            border-radius: 10px;
+        }
+        button {
+            background: #e67e22;
+            color: white;
+            border: none;
+            padding: 15px 30px;
+            font-size: 18px;
+            border-radius: 50px;
+            cursor: pointer;
+            margin-top: 20px;
+        }
+        button:hover {
+            background: #d35400;
+        }
+    </style>
+</head>
+<body>
+    <div class="app">
+        <header class="header">
+            <div class="logo">🍕 PizzaJoy</div>
+            <div class="phone">📞 +7 (999) 999-99-99</div>
+        </header>
+        <div class="content">
+            <h1>🍕 Самая вкусная пицца в городе!</h1>
+            <p>Добро пожаловать в нашу пиццерию!<br>Только натуральные ингредиенты и быстрая доставка.</p>
+            <button onclick="alert('Скоро здесь появится каталог! 🍕')">Сделать заказ →</button>
+            <div class="features">
+                <div class="feature">🔥 Горячая доставка</div>
+                <div class="feature">🧀 Свежие сыры</div>
+                <div class="feature">⭐ 4.9 рейтинг</div>
+            </div>
+        </div>
+    </div>
+</body>
+</html>
