@@ -1,10 +1,309 @@
 <!DOCTYPE html>
-<html>
+<html lang="ru">
 <head>
-    <meta http-equiv="refresh" content="0; url=static/">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Пиццерия 🍕</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        body {
+            font-family: Arial, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            padding: 20px;
+        }
+        .app {
+            max-width: 1200px;
+            margin: 0 auto;
+            background: rgba(255,255,255,0.95);
+            border-radius: 20px;
+            overflow: hidden;
+            box-shadow: 0 20px 60px rgba(0,0,0,0.3);
+        }
+        .header {
+            background: linear-gradient(135deg, #ff6b6b, #ee5a24);
+            color: white;
+            padding: 20px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+        }
+        .logo {
+            font-size: 28px;
+            font-weight: bold;
+        }
+        .phone {
+            font-size: 20px;
+        }
+        .delivery-time {
+            background: rgba(255,255,255,0.2);
+            padding: 8px 15px;
+            border-radius: 20px;
+        }
+        .main-container {
+            display: flex;
+            min-height: 600px;
+        }
+        .sidebar {
+            width: 250px;
+            background: #2c3e50;
+            color: white;
+        }
+        .menu {
+            list-style: none;
+            padding: 20px 0;
+        }
+        .menu-item {
+            padding: 15px 25px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+        .menu-item:hover {
+            background: #34495e;
+            transform: translateX(5px);
+        }
+        .menu-item.active {
+            background: #e67e22;
+        }
+        .content {
+            flex: 1;
+            padding: 30px;
+        }
+        .page {
+            display: none;
+        }
+        .page.active {
+            display: block;
+        }
+        .hero {
+            text-align: center;
+            padding: 50px 20px;
+        }
+        .hero h1 {
+            font-size: 48px;
+            margin-bottom: 20px;
+            color: #333;
+        }
+        .cta-btn {
+            background: #e67e22;
+            color: white;
+            border: none;
+            padding: 15px 30px;
+            font-size: 18px;
+            border-radius: 50px;
+            cursor: pointer;
+            margin-top: 20px;
+        }
+        .pizza-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+            gap: 25px;
+            margin-top: 20px;
+        }
+        .pizza-card {
+            background: white;
+            border-radius: 15px;
+            padding: 20px;
+            text-align: center;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+            transition: transform 0.3s;
+        }
+        .pizza-card:hover {
+            transform: translateY(-10px);
+        }
+        .price {
+            font-size: 24px;
+            font-weight: bold;
+            color: #e67e22;
+            margin: 10px 0;
+        }
+        .add-to-cart {
+            background: #27ae60;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 25px;
+            cursor: pointer;
+        }
+        .cart-item {
+            display: flex;
+            justify-content: space-between;
+            padding: 10px;
+            border-bottom: 1px solid #ddd;
+        }
+        .total {
+            font-size: 24px;
+            font-weight: bold;
+            text-align: right;
+            margin-top: 20px;
+        }
+        @media (max-width: 768px) {
+            .main-container {
+                flex-direction: column;
+            }
+            .sidebar {
+                width: 100%;
+            }
+            .menu {
+                display: flex;
+                overflow-x: auto;
+            }
+        }
+    </style>
 </head>
 <body>
-    <p>Перенаправление в <a href="static/">пиццерию</a>...</p>
+    <div class="app">
+        <header class="header">
+            <div class="logo">🍕 PizzaJoy</div>
+            <div class="phone">📞 +7 (999) 999-99-99</div>
+            <div class="delivery-time">🚚 30-45 минут</div>
+        </header>
+
+        <div class="main-container">
+            <nav class="sidebar">
+                <ul class="menu">
+                    <li class="menu-item active" data-page="home">🏠 Главная</li>
+                    <li class="menu-item" data-page="catalog">📋 Каталог</li>
+                    <li class="menu-item" data-page="prices">💰 Цены</li>
+                    <li class="menu-item" data-page="cart">🛒 Корзина</li>
+                    <li class="menu-item" data-page="support">💬 Поддержка</li>
+                </ul>
+            </nav>
+
+            <main class="content">
+                <div id="home" class="page active">
+                    <div class="hero">
+                        <h1>🍕 Самая вкусная пицца в городе!</h1>
+                        <p>Только натуральные ингредиенты и любовь в каждой пицце</p>
+                        <button class="cta-btn" onclick="navigateTo('catalog')">Сделать заказ →</button>
+                    </div>
+                </div>
+
+                <div id="catalog" class="page">
+                    <h2>Наше меню</h2>
+                    <div class="pizza-grid" id="pizzaGrid"></div>
+                </div>
+
+                <div id="prices" class="page">
+                    <h2>Прайс-лист</h2>
+                    <div id="priceTable"></div>
+                </div>
+
+                <div id="cart" class="page">
+                    <h2>🛒 Ваша корзина</h2>
+                    <div id="cartItems"></div>
+                    <div class="total" id="cartTotal"></div>
+                    <button class="cta-btn" onclick="checkout()">Оформить заказ</button>
+                </div>
+
+                <div id="support" class="page">
+                    <h2>💬 Поддержка</h2>
+                    <p>📞 Телефон: <strong>+7 (999) 999-99-99</strong></p>
+                    <p>📧 Email: <strong>pizza@joy.ru</strong></p>
+                    <p>⏰ Режим работы: <strong>10:00 - 23:00</strong></p>
+                </div>
+            </main>
+        </div>
+    </div>
+
+    <script>
+        const pizzas = {
+            margarita: { name: "Маргарита", price: 450, desc: "Томатный соус, моцарелла, базилик" },
+            pepperoni: { name: "Пепперони", price: 550, desc: "Пепперони, моцарелла, томатный соус" },
+            hawaiian: { name: "Гавайская", price: 520, desc: "Курица, ананас, моцарелла" },
+            four_cheese: { name: "4 сыра", price: 600, desc: "Моцарелла, пармезан, горгонзола, фета" }
+        };
+
+        let cart = [];
+
+        function renderCatalog() {
+            const grid = document.getElementById('pizzaGrid');
+            if (grid) {
+                grid.innerHTML = Object.entries(pizzas).map(([id, pizza]) => `
+                    <div class="pizza-card">
+                        <h3>${pizza.name}</h3>
+                        <p>${pizza.desc}</p>
+                        <div class="price">${pizza.price} ₽</div>
+                        <button class="add-to-cart" onclick="addToCart('${id}')">В корзину</button>
+                    </div>
+                `).join('');
+            }
+        }
+
+        function renderPrices() {
+            const container = document.getElementById('priceTable');
+            if (container) {
+                container.innerHTML = Object.values(pizzas).map(pizza => `
+                    <div class="cart-item">
+                        <span>${pizza.name}</span>
+                        <span>${pizza.price} ₽</span>
+                    </div>
+                `).join('');
+            }
+        }
+
+        function renderCart() {
+            const container = document.getElementById('cartItems');
+            const totalContainer = document.getElementById('cartTotal');
+            if (container && totalContainer) {
+                if (cart.length === 0) {
+                    container.innerHTML = '<p>Корзина пуста</p>';
+                    totalContainer.innerHTML = '';
+                    return;
+                }
+                const items = cart.map(id => pizzas[id]);
+                const total = items.reduce((sum, i) => sum + i.price, 0);
+                container.innerHTML = items.map(item => `
+                    <div class="cart-item">
+                        <span>${item.name}</span>
+                        <span>${item.price} ₽</span>
+                    </div>
+                `).join('');
+                totalContainer.innerHTML = `Итого: ${total} ₽`;
+            }
+        }
+
+        function addToCart(id) {
+            cart.push(id);
+            renderCart();
+            alert(`✅ ${pizzas[id].name} добавлена в корзину!`);
+        }
+
+        function checkout() {
+            if (cart.length === 0) {
+                alert('Корзина пуста');
+                return;
+            }
+            alert('🎉 Заказ оформлен! С вами свяжется оператор.');
+            cart = [];
+            renderCart();
+        }
+
+        function navigateTo(pageId) {
+            document.querySelectorAll('.page').forEach(page => page.classList.remove('active'));
+            document.getElementById(pageId).classList.add('active');
+            document.querySelectorAll('.menu-item').forEach(item => item.classList.remove('active'));
+            document.querySelector(`.menu-item[data-page="${pageId}"]`).classList.add('active');
+            
+            if (pageId === 'catalog') renderCatalog();
+            if (pageId === 'prices') renderPrices();
+            if (pageId === 'cart') renderCart();
+        }
+
+        document.querySelectorAll('.menu-item').forEach(item => {
+            item.addEventListener('click', () => navigateTo(item.dataset.page));
+        });
+
+        renderCatalog();
+        renderPrices();
+    </script>
 </body>
 </html>
